@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مساحة الطالب الذكية - تفاعلي</title>
+    <title>مساحة الطالب الذكية</title>
     
-    <!-- مكتبات التصميم والخطوط -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- إعدادات Tailwind -->
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -27,8 +29,8 @@
         }
     </script>
     
+    <!-- Custom Styles -->
     <style>
-        /* التنسيقات المخصصة */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -36,40 +38,43 @@
         
         body { font-family: 'Cairo', sans-serif; }
         
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-        .dark .glass { background: rgba(30, 41, 59, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        }
+        .dark .glass { 
+            background: rgba(30, 41, 59, 0.9); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+        }
         
-        /* تأثير نبض زر جيميناي */
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.5); transform: scale(1); }
             50% { box-shadow: 0 0 25px rgba(139, 92, 246, 0.8); transform: scale(1.05); }
         }
-        .gemini-btn { animation: pulse-glow 2.5s infinite; background: linear-gradient(135deg, #8b5cf6, #3b82f6); }
+        .gemini-btn { 
+            animation: pulse-glow 2.5s infinite; 
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6); 
+        }
         
-        /* تصميم صفحة الـ PDF */
         .pdf-page {
             background-color: white;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
-            background-size: 100% 2em;
-            background-position: 0 1.5em;
-            line-height: 2em;
             min-height: 842px; /* A4 height */
             width: 100%;
             max-width: 595px; /* A4 width */
         }
-        .dark .pdf-page { background-color: #f8fafc; color: #1e293b; } /* تبقى بيضاء للقراءة */
-        
-        .toolbar-btn { cursor: pointer; transition: all 0.2s; }
-        .toolbar-btn:hover { background-color: #e2e8f0; color: #14b8a6; }
-        .dark .toolbar-btn:hover { background-color: #334155; }
+        .dark .pdf-page { 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-dark-bg dark:text-gray-100 transition-colors duration-300 h-screen flex flex-col overflow-hidden">
 
-    <!-- شريط التنقل العلوي -->
+    <!-- Header -->
     <header class="glass relative z-50 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('folders')">
+        <div class="flex items-center gap-3 cursor-pointer" id="logo-btn">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-white">
                 <i class="fa-solid fa-book-open text-xl"></i>
             </div>
@@ -79,7 +84,7 @@
         </div>
         
         <div class="flex items-center gap-4">
-            <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-xl" onclick="toggleTheme()">
+            <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-xl">
                 <i class="fa-solid fa-moon dark:hidden"></i>
                 <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
             </button>
@@ -89,8 +94,8 @@
         </div>
     </header>
 
-    <!-- ================== واجهة المجلدات ================== -->
-    <main id="foldersView" class="flex-1 p-6 lg:p-10 overflow-y-auto">
+    <!-- Folders View -->
+    <main id="foldersView" class="flex-1 p-6 lg:p-10 overflow-y-auto flex">
         <div class="max-w-7xl mx-auto w-full">
             <div class="flex justify-between items-end mb-8 border-b dark:border-gray-700 pb-4">
                 <div>
@@ -102,159 +107,127 @@
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- المجلد -->
-                <div class="bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all cursor-pointer relative group" onclick="switchView('reader')">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="folders-container">
+                <!-- Example Folder -->
+                <div class="folder-item bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-4">
                         <div class="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 text-3xl group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-folder"></i>
                         </div>
-                        <button class="text-gray-400 hover:text-brand-500 p-2" onclick="event.stopPropagation(); toggleDropdown('menu1')">
+                        <button class="menu-trigger text-gray-400 hover:text-brand-500 p-2">
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                         </button>
                     </div>
                     <h3 class="font-bold text-xl mb-1">علم التشريح</h3>
-                    <p class="text-sm text-gray-500">3 محاضرات (اضغط للفتح)</p>
+                    <p class="text-sm text-gray-500">3 محاضرات</p>
                     
-                    <!-- القائمة المنبثقة -->
-                    <div id="menu1" class="hidden absolute left-4 top-14 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl w-32 z-10 flex flex-col overflow-hidden">
+                    <!-- Context Menu -->
+                    <div class="folder-menu absolute left-4 top-14 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl w-32 z-10 flex-col overflow-hidden hidden">
                         <button class="text-right px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fa-solid fa-pen mr-2"></i> تعديل</button>
                         <button class="text-right px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500"><i class="fa-solid fa-trash mr-2"></i> حذف</button>
                     </div>
-                </div>
-
-                <!-- ملف PDF مباشر -->
-                <div class="bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all cursor-pointer relative group" onclick="switchView('reader')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="w-14 h-14 rounded-2xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center text-red-600 text-3xl group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </div>
-                    </div>
-                    <h3 class="font-bold text-xl mb-1">أساسيات البرمجة.pdf</h3>
-                    <p class="text-sm text-gray-500">تم التعديل اليوم</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- ================== واجهة القارئ والتعديل ================== -->
-    <main id="readerView" class="hidden flex-1 flex-col bg-gray-200 dark:bg-[#0f172a] h-full overflow-hidden">
-        
-        <!-- شريط أدوات الوورد -->
+    <!-- Reader View -->
+    <main id="readerView" class="flex-1 flex-col bg-gray-200 dark:bg-[#0f172a] h-full overflow-hidden hidden">
+        <!-- Toolbar -->
         <div class="bg-white dark:bg-dark-surface border-b border-gray-300 dark:border-gray-700 p-2 flex items-center justify-between px-4 z-20 shadow-sm">
             <div class="flex items-center gap-4">
-                <button class="text-gray-600 dark:text-gray-300 hover:text-brand-500 flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg" onclick="switchView('folders')">
+                <button id="back-btn" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg">
                     <i class="fa-solid fa-arrow-right"></i> رجوع
                 </button>
-                <span class="font-bold text-sm">محاضرة_التشريح_الجهاز_العصبي.pdf</span>
+                <span class="font-bold text-sm" id="current-file-name">محاضرة_التشريح.pdf</span>
             </div>
 
-            <!-- أزرار التنسيق (تعمل حقيقياً بفضل JavaScript) -->
-            <div class="flex items-center gap-1 bg-gray-50 dark:bg-gray-800 p-1 rounded-lg border border-gray-200 dark:border-gray-600">
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('bold')" title="عريض"><i class="fa-solid fa-bold"></i></button>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('italic')" title="مائل"><i class="fa-solid fa-italic"></i></button>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('underline')" title="خط سفلي"><i class="fa-solid fa-underline"></i></button>
+            <!-- Formatting Tools -->
+            <div class="flex items-center gap-1 bg-gray-50 dark:bg-gray-800 p-1 rounded-lg border border-gray-200 dark:border-gray-600" id="format-toolbar">
+                <button data-command="bold" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-bold"></i></button>
+                <button data-command="italic" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-italic"></i></button>
+                <button data-command="underline" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-underline"></i></button>
                 <div class="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('justifyRight')" title="يمين"><i class="fa-solid fa-align-right"></i></button>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('justifyCenter')" title="توسيط"><i class="fa-solid fa-align-center"></i></button>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('justifyLeft')" title="يسار"><i class="fa-solid fa-align-left"></i></button>
+                <button data-command="justifyRight" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-align-right"></i></button>
+                <button data-command="justifyCenter" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-align-center"></i></button>
+                <button data-command="justifyLeft" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-align-left"></i></button>
                 <div class="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('insertUnorderedList')" title="تنقيط"><i class="fa-solid fa-list-ul"></i></button>
-                <button class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center" onclick="formatText('insertOrderedList')" title="ترقيم"><i class="fa-solid fa-list-ol"></i></button>
+                <button data-command="insertUnorderedList" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-list-ul"></i></button>
+                <button data-command="insertOrderedList" class="w-8 h-8 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center"><i class="fa-solid fa-list-ol"></i></button>
             </div>
 
-            <button class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2">
-                <i class="fa-solid fa-download"></i> تصدير PDF
+            <button id="export-pdf-btn" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2">
+                <i class="fa-solid fa-download"></i> تصدير
             </button>
         </div>
 
         <div class="flex flex-1 overflow-hidden relative">
-            <!-- الشريط الجانبي (الأدوات) -->
+            <!-- Sidebar -->
             <aside class="w-16 bg-white dark:bg-dark-surface border-l border-gray-200 dark:border-gray-700 flex flex-col items-center py-4 gap-4 z-10">
-                <button class="w-10 h-10 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center"><i class="fa-solid fa-arrow-pointer"></i></button>
-                <button class="w-10 h-10 rounded-lg hover:bg-yellow-100 hover:text-yellow-600 text-gray-600 dark:text-gray-300 flex items-center justify-center" onclick="highlightText()" title="تظليل النص"><i class="fa-solid fa-highlighter"></i></button>
+                <button id="pointer-btn" class="w-10 h-10 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center"><i class="fa-solid fa-arrow-pointer"></i></button>
+                <button id="highlight-btn" class="w-10 h-10 rounded-lg hover:bg-yellow-100 hover:text-yellow-600 text-gray-600 dark:text-gray-300 flex items-center justify-center"><i class="fa-solid fa-highlighter"></i></button>
+                
                 <div class="w-8 h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
                 
-                <!-- الأشكال -->
+                <!-- Shapes -->
                 <div class="relative group">
                     <button class="w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 flex items-center justify-center"><i class="fa-regular fa-object-group"></i></button>
                     <div class="absolute right-12 top-0 bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow-xl p-2 hidden group-hover:grid grid-cols-2 gap-2 w-24">
-                        <div class="w-8 h-8 border-2 border-blue-500 cursor-pointer hover:bg-gray-100"></div>
-                        <div class="w-8 h-8 border-2 border-green-500 rounded-full cursor-pointer hover:bg-gray-100"></div>
+                        <!-- Shapes generated by JS -->
                     </div>
                 </div>
 
-                <!-- إضافة صفحة -->
+                <!-- Add Page -->
                 <div class="relative group">
                     <button class="w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 flex items-center justify-center"><i class="fa-solid fa-file-circle-plus"></i></button>
                     <div class="absolute right-12 top-0 w-36 bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow-xl p-2 hidden group-hover:flex flex-col gap-1">
-                        <button class="text-xs text-right px-2 py-2 hover:bg-gray-100 rounded"><i class="fa-regular fa-file"></i> صفحة فارغة</button>
-                        <button class="text-xs text-right px-2 py-2 hover:bg-yellow-50 text-yellow-600 rounded"><i class="fa-solid fa-note-sticky"></i> ملاحظة صفراء</button>
+                        <button class="text-xs text-right px-2 py-2 hover:bg-gray-100 rounded add-page-btn" data-type="blank"><i class="fa-regular fa-file"></i> صفحة فارغة</button>
+                        <button class="text-xs text-right px-2 py-2 hover:bg-yellow-50 text-yellow-600 rounded add-page-btn" data-type="note"><i class="fa-solid fa-note-sticky"></i> ملاحظة صفراء</button>
                     </div>
                 </div>
             </aside>
 
-            <!-- منطقة عرض الورقة -->
-            <div class="flex-1 overflow-auto flex justify-center p-8 relative" id="pdfContainer">
-                <!-- الورقة (قابلة للتعديل بفضل contenteditable) -->
-                <div class="pdf-page p-12 outline-none font-serif text-lg" contenteditable="true" id="editor">
-                    <h1 class="text-3xl font-bold text-center text-blue-900 mb-6">الجهاز العصبي (Nervous System)</h1>
-                    <p class="mb-4 text-justify">
-                        حدد أي نص هنا، ثم اضغط على أزرار التنسيق في الأعلى (عريض، مائل، توسيط) ولاحظ كيف يتغير!
-                    </p>
-                    <ul class="list-disc pr-6 mb-4">
-                        <li>الجهاز العصبي المركزي (CNS): الدماغ والحبل الشوكي.</li>
-                        <li>الجهاز العصبي الطرفي (PNS): الأعصاب المنتشرة.</li>
-                    </ul>
-                    <p class="mb-4">
-                        لترجمة نص، حدد الكلمة واسألها في محادثة جيميناي أدناه!
-                    </p>
-                    
-                    <!-- زر ترجمة محفوظ كتجربة -->
-                    <div class="inline-block mt-4 p-2 bg-yellow-100 border-r-4 border-yellow-500 text-sm text-gray-800 rounded cursor-pointer" onclick="alert('ترجمة: Nervous System = الجهاز العصبي')">
-                        <i class="fa-solid fa-language text-brand-500"></i> ترجمة محفوظة: Nervous System
-                    </div>
+            <!-- PDF Container -->
+            <div class="flex-1 overflow-auto flex justify-center p-8 relative" id="pdf-container">
+                <div class="pdf-page p-12 outline-none font-serif text-lg" contenteditable="true" id="main-editor">
+                    <!-- PDF Content will be loaded here -->
                 </div>
             </div>
 
-            <!-- ================== المساعد الذكي Gemini ================== -->
-            
-            <!-- زر جيميناي العائم -->
-            <button class="gemini-btn absolute bottom-8 left-8 w-16 h-16 rounded-full text-white text-3xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-40" onclick="toggleGemini()">
+            <!-- Gemini Chat -->
+            <button id="gemini-toggle-btn" class="gemini-btn absolute bottom-8 left-8 w-16 h-16 rounded-full text-white text-3xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-40">
                 <i class="fa-solid fa-sparkles"></i>
             </button>
 
-            <!-- نافذة المحادثة -->
-            <div id="geminiChat" class="absolute bottom-28 left-8 w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col h-[500px] z-50 transition-all duration-300 transform scale-95 opacity-0 pointer-events-none origin-bottom-left">
-                
-                <!-- رأس المحادثة -->
+            <div id="gemini-chat-panel" class="absolute bottom-28 left-8 w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col h-[500px] z-50 transition-all duration-300 transform scale-95 opacity-0 pointer-events-none origin-bottom-left">
+                <!-- Chat Header -->
                 <div class="bg-gradient-to-r from-violet-600 to-blue-500 p-4 text-white flex justify-between items-center rounded-t-2xl">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-sparkles text-yellow-300"></i>
                         <span class="font-bold">المساعد الذكي Gemini</span>
                     </div>
-                    <button onclick="toggleGemini()" class="hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                    <button id="close-gemini-btn" class="hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 
-                <!-- مساحة الرسائل -->
-                <div id="chatMessages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-gray-50 dark:bg-gray-800">
+                <!-- Chat Messages -->
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-gray-50 dark:bg-gray-800">
                     <div class="bg-white dark:bg-gray-700 p-3 rounded-xl rounded-tr-none shadow-sm text-sm border dark:border-gray-600 self-start max-w-[85%]">
-                        مرحباً! أنا جاهز لمساعدتك في هذه المحاضرة. ماذا تريد أن نفعل؟
+                        مرحباً! أنا جاهز لمساعدتك.
                     </div>
                 </div>
 
-                <!-- البطاقات السريعة -->
-                <div class="grid grid-cols-2 gap-2 p-2 border-t dark:border-gray-700 bg-white dark:bg-gray-900">
-                    <button onclick="sendAI('لخص لي هذه الصفحة')" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-violet-100 hover:text-violet-600 font-bold flex items-center gap-1"><i class="fa-solid fa-bolt text-yellow-500"></i> تلخيص ذكي</button>
-                    <button onclick="sendAI('اشرح لي هذا الموضوع ببساطة')" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 hover:text-blue-600 font-bold flex items-center gap-1"><i class="fa-solid fa-brain text-blue-500"></i> فهم عميق</button>
-                    <button onclick="sendAI('ترجم المصطلحات الطبية')" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-green-100 hover:text-green-600 font-bold flex items-center gap-1"><i class="fa-solid fa-language text-green-500"></i> ترجمة دقيقة</button>
-                    <button onclick="sendAI('اعطني أسئلة امتحان عن الصفحة')" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-orange-100 hover:text-orange-600 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-question text-orange-500"></i> أسئلة امتحان</button>
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-2 gap-2 p-2 border-t dark:border-gray-700 bg-white dark:bg-gray-900" id="gemini-quick-actions">
+                    <button data-action="summarize" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-violet-100 hover:text-violet-600 font-bold flex items-center gap-1"><i class="fa-solid fa-bolt text-yellow-500"></i> تلخيص ذكي</button>
+                    <button data-action="explain" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 hover:text-blue-600 font-bold flex items-center gap-1"><i class="fa-solid fa-brain text-blue-500"></i> فهم عميق</button>
+                    <button data-action="translate" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-green-100 hover:text-green-600 font-bold flex items-center gap-1"><i class="fa-solid fa-language text-green-500"></i> ترجمة دقيقة</button>
+                    <button data-action="quiz" class="text-xs p-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-orange-100 hover:text-orange-600 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-question text-orange-500"></i> أسئلة امتحان</button>
                 </div>
 
-                <!-- حقل الإدخال -->
+                <!-- Input Field -->
                 <div class="p-3 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex gap-2">
-                    <input type="text" id="aiInput" placeholder="اسألني أي شيء..." class="flex-1 px-3 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:border-violet-500 text-sm" onkeypress="if(event.key === 'Enter') document.getElementById('sendBtn').click()">
-                    <button id="sendBtn" onclick="sendCustomAI()" class="bg-violet-500 hover:bg-violet-600 text-white w-10 h-10 rounded-lg flex items-center justify-center">
+                    <input type="text" id="ai-input" placeholder="اسألني أي شيء..." class="flex-1 px-3 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:border-violet-500 text-sm">
+                    <button id="send-ai-btn" class="bg-violet-500 hover:bg-violet-600 text-white w-10 h-10 rounded-lg flex items-center justify-center">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
@@ -262,111 +235,9 @@
         </div>
     </main>
 
-    <!-- سكريبت التفاعلات -->
-    <script>
-        // التبديل بين الوضع الليلي والنهاري
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        // التبديل بين واجهة المجلدات والقارئ
-        function switchView(view) {
-            document.getElementById('foldersView').classList.add('hidden');
-            document.getElementById('readerView').classList.add('hidden');
-            
-            document.getElementById(view + 'View').classList.remove('hidden');
-            document.getElementById(view + 'View').classList.add('flex'); // الحفاظ على تصميم الفليكس
-        }
-
-        // إظهار وإخفاء القوائم المنبثقة
-        function toggleDropdown(id) {
-            const menu = document.getElementById(id);
-            menu.classList.toggle('hidden');
-        }
-        // إخفاء القوائم عند النقر في أي مكان آخر
-        document.addEventListener('click', (e) => {
-            if(!e.target.closest('.group')) {
-                document.getElementById('menu1').classList.add('hidden');
-            }
-        });
-
-        // ================= أدوات تعديل النصوص (تعمل فعلياً) =================
-        function formatText(command) {
-            document.execCommand(command, false, null);
-            document.getElementById('editor').focus();
-        }
-
-        function highlightText() {
-            // تلوين النص المحدد باللون الأصفر
-            document.execCommand('backColor', false, '#fef08a');
-        }
-
-        // ================= المساعد الذكي Gemini =================
-        let isChatOpen = false;
-        function toggleGemini() {
-            const chat = document.getElementById('geminiChat');
-            isChatOpen = !isChatOpen;
-            if(isChatOpen) {
-                chat.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
-                chat.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
-            } else {
-                chat.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
-                chat.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
-            }
-        }
-
-        function appendMessage(text, isUser = false, isLoading = false) {
-            const box = document.getElementById('chatMessages');
-            const msg = document.createElement('div');
-            
-            if(isLoading) {
-                msg.id = 'loadingMsg';
-                msg.className = 'bg-white dark:bg-gray-700 p-3 rounded-xl rounded-tr-none shadow-sm text-sm border dark:border-gray-600 self-start text-gray-500 italic';
-                msg.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-violet-500"></i> جاري التفكير...';
-            } else if (isUser) {
-                msg.className = 'bg-violet-100 dark:bg-violet-900/50 p-3 rounded-xl rounded-tl-none shadow-sm text-sm border border-violet-200 dark:border-violet-700 self-end max-w-[85%] text-violet-900 dark:text-violet-100';
-                msg.innerText = text;
-            } else {
-                msg.className = 'bg-white dark:bg-gray-700 p-3 rounded-xl rounded-tr-none shadow-sm text-sm border dark:border-gray-600 self-start max-w-[85%] leading-relaxed';
-                msg.innerHTML = text; // السماح بـ HTML لتنسيق الرد
-            }
-            
-            box.appendChild(msg);
-            box.scrollTop = box.scrollHeight; // النزول للأسفل تلقائياً
-        }
-
-        function sendAI(promptText) {
-            appendMessage(promptText, true); // رسالة المستخدم
-            appendMessage("", false, true); // رسالة التحميل
-            
-            // محاكاة استجابة الذكاء الاصطناعي
-            setTimeout(() => {
-                document.getElementById('loadingMsg').remove();
-                
-                let response = "";
-                if(promptText.includes('لخص')) {
-                    response = "<b>الخلاصة:</b><br>الجهاز العصبي هو شبكة التحكم بالجسم، ينقسم إلى مركزي (دماغ وحبل شوكي) وطرفي (أعصاب).";
-                } else if (promptText.includes('اشرح') || promptText.includes('فهم')) {
-                    response = "<b>تبسيط:</b><br>تخيل الدماغ كمدير الشركة، والحبل الشوكي كالهاتف، والأعصاب كالموظفين الذين ينفذون الأوامر!";
-                } else if (promptText.includes('ترجم')) {
-                    response = "<b>المصطلحات:</b><br>- Nervous System: الجهاز العصبي<br>- CNS: الجهاز العصبي المركزي";
-                } else if (promptText.includes('أسئلة')) {
-                    response = "<b>سؤال:</b> ما هما المكونان الأساسيان للجهاز العصبي المركزي؟<br><i>(الجواب: الدماغ والحبل الشوكي)</i>";
-                } else {
-                    response = "أنا المساعد الذكي للتطبيق! عندما نقوم بربط الـ API الفعلي، سأقوم بقراءة أي نص تحدده في المحاضرة وأجيبك عليه بالتفصيل.";
-                }
-                
-                appendMessage(response, false);
-            }, 1500);
-        }
-
-        function sendCustomAI() {
-            const input = document.getElementById('aiInput');
-            if(input.value.trim() !== '') {
-                sendAI(input.value);
-                input.value = '';
-            }
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="js/ui.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/firebase.js"></script>
 </body>
 </html>
